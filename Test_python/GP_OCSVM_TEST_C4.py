@@ -38,7 +38,7 @@ def loading_Sample_file(relay, config):
     loads small sample test data
     '''
     mat_file = 'sample_' + config + relay
-    dir_sample = '..\Data'
+    dir_sample = '../Data'
     os.chdir(dir_sample)
     data2 = sio.loadmat(mat_file)[mat_file]
     return data2
@@ -47,7 +47,7 @@ def loading_matfile_test(relay, config):
     '''
     loads the entire test matfile
     '''
-    dir_sample = '..\Data'
+    dir_sample = '../Data'
     os.chdir(dir_sample)
     mat_file = config+relay 
     data2 = sio.loadmat(relay + '.mat')[mat_file]
@@ -61,13 +61,13 @@ def load_GPOCSVM_models(relay, config):
     mat_file = config + relay 
     
     ## loading train data for initializing GP
-    os.chdir('..\Data')    
+    os.chdir('../Data')    
     [train_x, train_y] = np.load('train_GP_' + mat_file + '.npy')
     train_x = torch.from_numpy(train_x)
     train_y = torch.from_numpy(train_y)
 
     ## loading all the GP models
-    os.chdir('..\Models')
+    os.chdir('../Models')
     #GP1
     GP1, likelihood1 = GP_model(train_x, train_y[:,0])
     GP1_state_dict = torch.load('GP1_' + mat_file + '.pth')
