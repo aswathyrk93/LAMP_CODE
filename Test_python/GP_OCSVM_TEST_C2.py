@@ -38,7 +38,7 @@ def loading_Sample_file(relay, config):
     loads small sample test data
     '''
     mat_file = 'sample_' + config + relay
-    dir_sample = '..\Data'
+    dir_sample = '../Data'
     os.chdir(dir_sample)
     data2 = sio.loadmat(mat_file)[mat_file]
     return data2
