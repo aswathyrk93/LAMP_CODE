@@ -9,13 +9,15 @@ import os
 from sklearn.svm import SVC
 import scipy.io as sio
 import numpy as np
+import warnings
+warnings.filterwarnings('ignore')
 
 def data_preparation(data2, max1, min1):
-    data2[:,1:7] = (data2[:,1:7] - min1) / (max1 - min1)
+    data2 = (data2 - min1) / (max1 - min1)
     test = data2
-    x_test = test[:,1:7]
-    y_test = test[:,10]
-    return x_test, y_test
+    x_test = test#[:,1:7]
+    #y_test = test#[:,10]
+    return x_test#, y_test
 
 def load_svm_model(relay):
     '''
@@ -59,6 +61,16 @@ def loading_Sample_file(relay, config):
     data2 = sio.loadmat(mat_file)[mat_file]
     return data2
 
+def svm_test_main(data, relay):
+    
+    [svm_model, max_min_tr] = load_svm_model(relay)
+# using pymodbus
+    test = data_preparation(data,  max_min_tr[0,:],  max_min_tr[1,:])
+#### CHANGED HERE ####    
+    prob = svm_test(np.array(test).reshape(-1,1).T, svm_model)
+    return prob[0] # probability has the probability scores
+
+'''
 def main():
     relay = 'RTL3'
     config = 'C1' # IMP:::::::::: need to change based on the test data config
@@ -80,4 +92,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+'''
 

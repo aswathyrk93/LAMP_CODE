@@ -17,6 +17,8 @@ from sklearn import svm
 import pickle
 import os
 
+warnings.filterwarnings('ignore')
+
 class ExactGPModel(gpytorch.models.ExactGP):
     def __init__(self, train_x, train_y, likelihood):
         super(ExactGPModel, self).__init__(train_x, train_y, likelihood)
@@ -89,11 +91,11 @@ def load_GPOCSVM_models(relay, config):
     return GP1.double(), GP2.double(), GP3.double(), likelihood1, likelihood2, likelihood3, OCSVM, max1, min1
 
 def data_preparation(test, max1, min1):
-    test[:,1:7] = (test[:,1:7] - min1) / (max1 - min1)
-    test_x = test[:,1:4]
-    test_y = test[:,4:7]
-    test_lab = 2*(test[:,10]==0)-1
-    return test_x, test_y, test_lab
+    test = (test - min1) / (max1 - min1)
+    test_x = test[:,0:3]
+    test_y = test[:,3:6]
+    #test_lab = 2*(test[:,10]==0)-1
+    return test_x, test_y
 
 
 def Gp_test(test_x, model, likelihood):
@@ -163,8 +165,17 @@ def plot_test_GP(observed_pred, f_var, test_y):
         error1 = observed_pred.mean.numpy()[n_sample0:n_sample1] - test_y.numpy()[n_sample0:n_sample1]
     return error1, f_var
 
+def GP_test_main(test, relay):
+    config = 'C3'   # for training
+    [GP1, GP2, GP3, lh1, lh2, lh3, OCSVM, max1, min1] = load_GPOCSVM_models(relay, config)
+    
+    [test_x, test_y] = data_preparation(np.array(test).reshape(-1,1).T, max1, min1)
+    # testing on the data
+    [pred, scores_oc, p, test] = GP_plus_OC_TEST(test_x, test_y, GP1, lh1, GP2, lh2, GP3, lh3, OCSVM)
+    return pred # +1 normal, -1 abnormal
+'''
 def main():
-    config = 'C3'
+    config = 'C1'
     relay = 'RTL3'
     [GP1, GP2, GP3, lh1, lh2, lh3, OCSVM, max1, min1] = load_GPOCSVM_models(relay, config)
     test = loading_Sample_file(relay, 'C1')
@@ -178,4 +189,5 @@ def main():
     
 if __name__ == '__main__':
     main()
+'''
 

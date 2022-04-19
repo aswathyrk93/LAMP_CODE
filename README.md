@@ -16,7 +16,8 @@ Test_python:
    - CNN_TEST.py : tests the CNN block for classifying the configurations.
    - Fault_Classifier_testC1.py : Tests the SVM model trained using data of Configuration 1. Similarly there are 3 more files for each of the configurations. 
    - GP_OCSVM_TEST_C1.py: Tests the GP_OCSVM model trained using data of configuration 1. Similary there are 3 more files for each of the configurations. 
-> The codes in test file access sample_Data from "DATA" folder and models from "MODELS" directory to perform the tests.
+   - microgrid_reading.py: Reads all the data using modbus and passes them to the above test files for performing the fina computation of probabilities.
+> The main code here is the "microgrid_reading.py" which reads the data from client and processes them through all the models in "MODELS" folder and computes the final output to display them.
 
 Train:
 > contains ipynb files for training all the algorithms: CNN (for topology estimation), GP+OCSVM (fault detection), SVM (fault classification)

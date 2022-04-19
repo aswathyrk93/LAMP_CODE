@@ -11,7 +11,8 @@ import keras
 from keras.models import Sequential
 from keras.layers.convolutional import Conv1D, MaxPooling1D
 from keras.layers import Dense, Dropout, Activation, Flatten
-
+import warnings
+warnings.filterwarnings('ignore')
 
 # In[2]:
 
@@ -39,9 +40,11 @@ def model_struct():
     model.add(Dense(n_outputs, activation='softmax'))
     return model
 
-def split_sequence_window_past_only(data, n_steps=100):
-    if data.shape[0]< n_steps :
-        return [0,0]
+def split_sequence_window_past_only(data1, n_steps=100):
+    data = np.array(data1)
+    #print(data1)
+    if data.shape[0]< n_steps+1 :
+        return [[0],[0]]
     else:
         X, y, ind = list(), list(), list()
         #sequence_y = data[:,11]
@@ -56,7 +59,7 @@ def split_sequence_window_past_only(data, n_steps=100):
             X.append(seq_x)
             #y.append(seq_y)
             ind.append(end_ix)
-        return np.array(np.squeeze(X)), np.array(ind)
+        return np.squeeze(X, axis = 1), np.array(ind)
 
 def CNN_model_load(relay, config):
     model = model_struct()
@@ -84,11 +87,32 @@ def loading_Sample_file(relay, config):
     return data2
 
 def data_preparation(data2, max1, min1):
-    data2[:,1:7] = (data2[:,1:7] - min1) / (max1 - min1)
+    data2 = (data2 - min1) / (max1 - min1)
     test = data2
-    x_test = test[:,1:7]
-    y_test = test[:,10]
-    return x_test, y_test
+    x_test = test#[:,1:7]
+    #y_test = test[:,10]
+    return x_test#, y_test
+
+def CNN_TEST1(data, relay):
+    dir_sav = './Models'
+    mdic = {"data": data}
+    config = 'C1'
+    [model, max_min_tr] = CNN_model_load(relay, config)
+    test = data_preparation(data,  max_min_tr[0,:],  max_min_tr[1,:])
+    
+    [t1, ind1] = split_sequence_window_past_only(test)
+ 
+    if np.shape(t1)[0]==1:
+        print('WARNING: insufficient data to process through the model')
+        return [float("NaN"), float("NaN"), float("NaN"), float("NaN")]
+    else:
+        X_test = t1
+        #print(X_test)
+        Y_pred = model.predict(X_test, verbose=2)
+        #print(Y_pred[-1])
+        return Y_pred[-1]
+
+'''
 
 def main():
     dir_sav = './Models'
@@ -120,7 +144,7 @@ if __name__ == '__main__':
 
 
 # In[ ]:
-
+'''
 
 
 
