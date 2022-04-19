@@ -1,4 +1,4 @@
-# LAMP_CODE
+# LAMP_CODE DESCRIPTION
 
 There are 4 folders in this reposiory:
 
@@ -27,6 +27,9 @@ Train:
    - Fault_classifier_trainC1:  trains the fault classifier using SVM for configuration 1 and saves the corresponding model. Similarly we have fault classifier training models for the other three configurations
    - GP_OCSVM_train: THIS FILE IS IMPORTANT. This mode needs to RETRAINED most frequently. EVERY other day. This is unsupervised block and it trains on the input data and saves all three GP models and OCSVM model
 
+# INSTALL ALL DEPENDENCIES
+Added pip install requirements for the git. To install the dependencies type:
 
+'pip install -r requirements.txt'
 
             
